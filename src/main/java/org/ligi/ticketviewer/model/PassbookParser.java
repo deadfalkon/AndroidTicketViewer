@@ -120,22 +120,7 @@ public class PassbookParser {
         }
 
         if (pass_json != null) {
-            try {
-                JSONArray beacons_array = pass_json.getJSONArray("beacons");
-                beacons = new PassBeacon[beacons_array.length()];
-                for (int i = 0; i < beacons_array.length(); i++) {
-                    JSONObject obj = beacons_array.getJSONObject(i);
-                    PassBeacon beacon = new PassBeacon();
-                    beacon.major = obj.getInt("major");
-                    beacon.minor = obj.getInt("minor");
-                    beacon.proximityUUID = UUID.fromString(obj.getString("proximityUUID"));
-                    beacon.relevantText = obj.getString("relevantText");
-                    beacons[i] = beacon;
-                }
 
-
-            } catch (JSONException e) {
-            }
 
 
             try {
@@ -195,6 +180,25 @@ public class PassbookParser {
                 }
             } else try {
                 eventTicket = pass_json.getJSONObject(type);
+            } catch (JSONException e) {
+            }
+
+            try {
+                JSONArray beacons_array = pass_json.getJSONArray("beacons");
+                beacons = new PassBeacon[beacons_array.length()];
+                for (int i = 0; i < beacons_array.length(); i++) {
+                    JSONObject obj = beacons_array.getJSONObject(i);
+                    PassBeacon beacon = new PassBeacon();
+                    if (obj.has("major")) beacon.major = obj.getInt("major");
+                    if (obj.has("minor")) beacon.minor = obj.getInt("minor");
+                    if (obj.has("relevantText")) beacon.relevantText = obj.getString("relevantText");
+                    beacon.proximityUUID = UUID.fromString(obj.getString("proximityUUID"));
+                    beacon.callbackActionString = "org.ligi.ticketviewer.iBeaconCallBack";
+                    beacon.title = description == null ? description : "<pass>";
+                    beacons[i] = beacon;
+                }
+
+
             } catch (JSONException e) {
             }
 

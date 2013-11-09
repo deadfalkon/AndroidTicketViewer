@@ -108,6 +108,13 @@
 
                 <data android:mimeType="application/vnd-com.apple.pkpass"/>
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="org.ligi.ticketviewer.iBeaconCallBack"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
         </activity>
         <activity
                 android:name="org.ligi.ticketviewer.ui.TicketViewActivity"
