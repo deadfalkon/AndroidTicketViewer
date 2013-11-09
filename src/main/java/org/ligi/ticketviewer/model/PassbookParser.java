@@ -17,10 +17,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import beacon.PassBeacon;
+
 public class PassbookParser {
+
 
     private String path;
     private String problem_str = "";
@@ -34,6 +38,7 @@ public class PassbookParser {
     private String type;
     private List<Field> primaryFields, secondaryFields, backFields, auxiliaryFields, headerFields;
     private List<PassLocation> locations = new ArrayList<PassLocation>();
+    private PassBeacon[] beacons = new PassBeacon[0];
     private int fgcolor;
     private JSONObject eventTicket = null;
 
@@ -115,6 +120,22 @@ public class PassbookParser {
         }
 
         if (pass_json != null) {
+            try {
+                JSONArray beacons_array = pass_json.getJSONArray("beacons");
+                beacons = new PassBeacon[beacons_array.length()];
+                for (int i = 0; i < beacons_array.length(); i++) {
+                    JSONObject obj = beacons_array.getJSONObject(i);
+                    PassBeacon beacon = new PassBeacon();
+                    beacon.major = obj.getInt("major");
+                    beacon.minor = obj.getInt("minor");
+                    beacon.proximityUUID = UUID.fromString(obj.getString("proximityUUID"));
+                    beacon.relevantText = obj.getString("relevantText");
+                    beacons[i] = beacon;
+                }
+
+
+            } catch (JSONException e) {
+            }
 
 
             try {
@@ -248,6 +269,10 @@ public class PassbookParser {
         return locations;
     }
 
+    public PassBeacon[] getBeacons() {
+        return beacons;
+    }
+
     /**
      * returns a list of Fields for the key - empty list when no elements - not nul
      *
@@ -358,6 +383,8 @@ public class PassbookParser {
     public int getFGcolor() {
         return fgcolor;
     }
+
+
 
     public class PassLocation {
 

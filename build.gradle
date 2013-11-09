@@ -50,6 +50,8 @@ android {
         compile 'org.ligi:AXT:0.22'
         compile 'com.android.support:support-v4:18.0.0'
 
+        compile fileTree(dir: 'libs', include: 'AndroidBeaconMinilib-0.1.jar')
+
         withAnalyticsCompile fileTree(dir: 'libs', include: 'libGoogleAnalyticsV2.jar')
         withMapsCompile 'com.google.android.gms:play-services:3.1.36'
     }

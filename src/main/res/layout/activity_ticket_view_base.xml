@@ -27,6 +27,40 @@
                     />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/location_container"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="This passbook has geofencing metadata"/>
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="register for geofencing"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/beacon_container"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="This passbook has iBeacon metadata"/>
+            <Button
+                android:id="@+id/registerBeaconScan"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="register beacon scanning"/>
+
+        </LinearLayout>
 
         <TextView android:id="@+id/back_fields"
                   android:layout_width="match_parent"

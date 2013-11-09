@@ -1,6 +1,7 @@
 package org.ligi.ticketviewer.ui;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +20,9 @@ import org.ligi.ticketviewer.TicketDefinitions;
 import org.ligi.ticketviewer.helper.PassbookVisualisationHelper;
 import org.ligi.ticketviewer.maps.PassbookMapsFacade;
 import org.ligi.ticketviewer.model.PassbookParser;
+
+
+import beacon.PassBeacon;
 
 import org.ligi.ticketviewer.R;
 
@@ -55,6 +60,33 @@ public class TicketViewActivity extends TicketViewActivityBase {
         ImageView barcode_img = (ImageView) findViewById(R.id.barcode_img);
 
         barcode_img.setImageBitmap(passbookParser.getBarcodeBitmap());
+
+        if (passbookParser.getBeacons().length > 0){
+            findViewById(R.id.beacon_container).setVisibility(View.VISIBLE);
+
+            Button beaconButton = (Button) findViewById(R.id.registerBeaconScan);
+            beaconButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent registerBeaconIntent = new Intent("REGISTER_BLUETOOTH_BEACON");
+                    registerBeaconIntent.putExtra("BEACONS", passbookParser.getBeacons());
+                    try{
+                        startActivity(registerBeaconIntent);
+                    }
+                    catch (ActivityNotFoundException e){
+                        Intent psi = new Intent(Intent.ACTION_VIEW);
+                        psi.setData(Uri.parse("https://play.google.com/store/apps/detail?id=de.android.btbeaconscanner"));
+                        psi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(psi);
+                    }
+                }
+            });
+
+        }
+
+        if (!passbookParser.getLocations().isEmpty()){
+            findViewById(R.id.location_container).setVisibility(View.VISIBLE);
+        }
 
         // when clicking on the barcode we want to go to the activity showing the barcode fullscreen
         barcode_img.setOnClickListener(new View.OnClickListener() {
